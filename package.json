@@ -1,0 +1,42 @@
+{
+  "name": "@jovijovi/ether-keystore",
+  "version": "0.1.0",
+  "description": "A keystore toolkit for Ethereum ecosystem",
+  "author": "jovijovi <mageyul@hotmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "typescript",
+    "tookit",
+    "ether-keystore",
+    "ethereum",
+    "ether",
+    "keystore",
+    "wallet"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf ./dist/*",
+    "test": "jest --coverage --forceExit",
+    "build": "yarn clean && tsc --build",
+    "clean-pub": "rm -rf ./publish/* && mkdir -p ./publish",
+    "prepub": "yarn clean-pub && yarn build && cp -ap ./dist/lib ./publish/lib && cp -ap LICENSE ./publish/ && cp -ap package.json ./publish/ && cp -ap README.md ./publish/"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.2",
+    "@typechain/ethers-v5": "10.0.0",
+    "@types/jest": "27.4.1",
+    "@types/node": "17.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/parser": "^5.19.0",
+    "eslint": "^8.13.0",
+    "jest": "27.5.1",
+    "ts-jest": "27.1.4",
+    "ts-node": "10.7.0",
+    "typechain": "8.0.0",
+    "typescript": "4.6.3"
+  },
+  "dependencies": {
+    "@jovijovi/pedrojs-common": "^1.0.19",
+    "ethers": "5.6.4"
+  }
+}
