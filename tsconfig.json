@@ -1,26 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "composite": false,
+    "declaration": true,
+    "declarationMap": false,
+    "lib": [
+      "es2020"
+    ],
     "module": "commonjs",
-    "strict": false,
-    "esModuleInterop": true,
-    "removeComments": true,
+    "moduleResolution": "node",
+    "target": "es2020",
+    "sourceMap": true,
+    "removeComments": false,
     "outDir": "dist",
-    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": false,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "typeRoots": [
-      "node_modules/@0x/typescript-typings/types",
-      "node_modules/@types"
-    ]
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "./lib/**/*",
     "./test/**/*",
   ],
   "exclude": [
-    "node_modules",
+    ".github",
+    "coverage",
     "dist",
     "doc",
+    "keystore",
+    "node_modules",
+    "publish"
   ]
 }
