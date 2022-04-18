@@ -1,6 +1,6 @@
 {
   "name": "@jovijovi/ether-keystore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A keystore toolkit for Ethereum ecosystem",
   "author": "jovijovi <mageyul@hotmail.com>",
   "license": "MIT",
@@ -13,7 +13,9 @@
     "keystore",
     "wallet"
   ],
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist/*",
     "test": "jest --coverage --forceExit",
