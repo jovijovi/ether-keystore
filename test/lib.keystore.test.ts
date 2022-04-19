@@ -2,8 +2,8 @@ import {keystore} from '../lib';
 import assert from 'assert';
 import {utils, Wallet,} from 'ethers';
 import fs from 'fs';
-import path from "path";
-import {randomFillSync} from "crypto";
+import path from 'path';
+import {randomFillSync} from 'crypto';
 
 let mockAddress = '';
 const mockPassphraseBase64 = 'MTIzNDU2';
@@ -131,7 +131,7 @@ test('ERROR: invalid address', async () => {
 	}
 }, 10000)
 
-test('ERROR: key file not exist', async () => {
+test('ERROR: the key file does not exist', async () => {
 	try {
 		const wallet = await keystore.InspectKeystoreWallet(mockAddress.toLowerCase(), 'not_exist', mockPassphraseBase64);
 		console.debug("Wallet address=", wallet.address);
