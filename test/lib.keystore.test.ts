@@ -182,3 +182,7 @@ test('ERROR: invalid password', async () => {
 		assert.strictEqual(e.message, keystore.errors.ErrorInvalidPassword);
 	}
 }, 10000)
+
+test('Clear Cache', () => {
+	keystore.ClearCache();
+})

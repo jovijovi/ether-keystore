@@ -104,6 +104,15 @@ export async function InspectKeystorePKWithoutPrefix(address: string, keystoreTy
 	return pk;
 }
 
+// Clear cache
+export function ClearCache() {
+	if (ksCache) {
+		if (ksCache.size > 0) {
+			ksCache.clear();
+		}
+	}
+}
+
 export * as ksUtil from './ksutil';
 export * as types from './types';
 export {ksCache} from './cache';
