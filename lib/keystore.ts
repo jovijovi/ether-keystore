@@ -7,6 +7,7 @@ import {CacheType, ksCache} from './cache';
 import {RetryInterval, RetryTimes} from './params';
 import * as errors from './errors';
 
+// Default keystore directory
 const defaultKeystoreDir = 'keystore';
 
 // getCipherText returns cipher text from key file
