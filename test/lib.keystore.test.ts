@@ -1,33 +1,35 @@
 import {keystore} from '../lib';
 import assert from 'assert';
-import {utils, Wallet,} from 'ethers';
+import {utils, Wallet} from 'ethers';
 import fs from 'fs';
 import path from 'path';
 import {randomFillSync} from 'crypto';
+import * as util from 'util';
 
 let mockAddress = '';
 const mockPassphraseBase64 = 'MTIzNDU2';
 const mockPassphrasePlain = '123456';
+const maxEntropyLength = 64;
 
 beforeAll(async () => {
 	const wallet = Wallet.createRandom({
-		extraEntropy: randomFillSync(new Uint8Array(64)),
+		extraEntropy: randomFillSync(new Uint8Array(maxEntropyLength)),
 	});
 
 	const jsonWallet = await wallet.encrypt(mockPassphrasePlain);
 
-	const path1 = path.resolve('keystore', 'miner');
+	const path1 = path.resolve(keystore.params.DefaultKeystoreDir, keystore.types.KeystoreTypeMiner);
 	if (!fs.existsSync(path1)) {
 		fs.mkdirSync(path1, {recursive: true});
 	}
 
-	const path2 = path.resolve('keystore', 'fee');
+	const path2 = path.resolve(keystore.params.DefaultKeystoreDir, keystore.types.KeystoreTypeFee);
 	if (!fs.existsSync(path2)) {
 		fs.mkdirSync(path2, {recursive: true});
 	}
 
-	const keyPath1 = path.resolve('keystore', 'miner', wallet.address.toLowerCase());
-	const keyPath2 = path.resolve('keystore', 'fee', wallet.address.toLowerCase());
+	const keyPath1 = path.resolve(keystore.params.DefaultKeystoreDir, keystore.types.KeystoreTypeMiner, wallet.address.toLowerCase());
+	const keyPath2 = path.resolve(keystore.params.DefaultKeystoreDir, keystore.types.KeystoreTypeFee, wallet.address.toLowerCase());
 
 	fs.writeFileSync(keyPath1, jsonWallet);
 	fs.copyFileSync(keyPath1, keyPath2);
@@ -46,7 +48,12 @@ test('InspectKeystorePK', async () => {
 }, 10000)
 
 test('InspectKeystorePK with plain passphrase', async () => {
-	const pk = await keystore.InspectKeystorePK(mockAddress.toLowerCase(), keystore.types.KeystoreTypeMiner, mockPassphrasePlain, false, false);
+	const pk = await keystore.InspectKeystorePK(mockAddress.toLowerCase(), keystore.types.KeystoreTypeMiner, mockPassphrasePlain,
+		{
+			isBase64: false,
+			useCache: false
+		}
+	);
 	console.debug("PK=", pk);
 
 	const address = utils.computeAddress(pk);
@@ -72,7 +79,12 @@ test('InspectKeystoreWallet', async () => {
 }, 10000)
 
 test('InspectKeystoreWallet with plain passphrase', async () => {
-	const wallet = await keystore.InspectKeystoreWallet(mockAddress.toLowerCase(), keystore.types.KeystoreTypeFee, mockPassphrasePlain, false, false);
+	const wallet = await keystore.InspectKeystoreWallet(mockAddress.toLowerCase(), keystore.types.KeystoreTypeFee, mockPassphrasePlain,
+		{
+			isBase64: false,
+			useCache: false
+		}
+	);
 	console.debug("Wallet address=", wallet.address);
 	assert.strictEqual(mockAddress.toLowerCase(), wallet.address.toLowerCase());
 }, 10000)
@@ -102,13 +114,22 @@ test('With Cache', async () => {
 
 test('Without Cache', async () => {
 	for (let i = 0; i < 3; i++) {
-		const pk1 = await keystore.InspectKeystorePK(mockAddress.toLowerCase(), keystore.types.KeystoreTypeMiner, mockPassphraseBase64, true, false);
+		const pk1 = await keystore.InspectKeystorePK(mockAddress.toLowerCase(), keystore.types.KeystoreTypeMiner, mockPassphraseBase64, {
+			isBase64: true,
+			useCache: false
+		});
 		console.debug("PK1=", pk1);
 
-		const pk2 = await keystore.InspectKeystorePKWithoutPrefix(mockAddress.toLowerCase(), keystore.types.KeystoreTypeFee, mockPassphraseBase64, true, false);
+		const pk2 = await keystore.InspectKeystorePKWithoutPrefix(mockAddress.toLowerCase(), keystore.types.KeystoreTypeFee, mockPassphraseBase64, {
+			isBase64: true,
+			useCache: false
+		});
 		console.debug("PK2=", pk2);
 
-		const wallet = await keystore.InspectKeystoreWallet(mockAddress.toLowerCase(), keystore.types.KeystoreTypeFee, mockPassphraseBase64, true, false);
+		const wallet = await keystore.InspectKeystoreWallet(mockAddress.toLowerCase(), keystore.types.KeystoreTypeFee, mockPassphraseBase64, {
+			isBase64: true,
+			useCache: false
+		});
 		console.debug("Wallet= address", wallet.address);
 	}
 }, 100000)
@@ -138,6 +159,17 @@ test('ERROR: the key file does not exist', async () => {
 	} catch (e) {
 		console.error(e);
 		assert.strictEqual(e.message, keystore.errors.ErrorKeyFileNotExist);
+	}
+
+	try {
+		const wallet = await keystore.InspectKeystoreWallet(mockAddress.toLowerCase(), keystore.types.KeystoreTypeMiner, mockPassphraseBase64, {
+			keystoreDir: 'not_exist_dir'
+		});
+		console.debug("Wallet address=", wallet.address);
+	} catch (e) {
+		console.error(e);
+		const regExp = new RegExp(util.format('%s, keyPath=', keystore.errors.ErrorKeyFileNotExist))
+		assert.match(e.message, regExp);
 	}
 }, 10000)
 
