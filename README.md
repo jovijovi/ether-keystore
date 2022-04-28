@@ -17,7 +17,7 @@ A keystore toolkit for Ethereum ecosystem.
 ## Development Environment
 
 - typescript `4.6.3`
-- node `v16.14.2`
+- node `v16.15.0`
 - ts-node `v10.7.0`
 - yarn `v1.22.18`
 
@@ -37,11 +37,26 @@ yarn add @jovijovi/ether-keystore
 
 ```typescript
 import {keystore} from '@jovijovi/ether-keystore';
+
+const pk = await keystore.InspectKeystorePK(
+    '0x7a1bdd1481e5713e36f501a8cca4a9eaa423d547',   // Wallet address
+    keystore.types.KeystoreTypeMiner,               // Keystore type
+    'MTIzNDU2'                                      // Passphrase in BASE64
+);
+console.log("PK=", pk);
+
+const wallet = await keystore.InspectKeystoreWallet(
+    '0x7a1bdd1481e5713e36f501a8cca4a9eaa423d547',   // Wallet address
+    keystore.types.KeystoreTypeFee,                 // Keystore type
+    'MTIzNDU2'                                      // Passphrase in BASE64
+);
+console.debug("Wallet address=", wallet.address);
 ```
 
 ## Roadmap
 
 - Documents
+- Security keystore in memory
 
 ## License
 
