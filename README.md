@@ -17,8 +17,8 @@ A keystore toolkit for Ethereum ecosystem.
 
 ## Development Environment
 
-- typescript `4.8.4`
-- node `v16.18.0`
+- typescript `4.9.3`
+- node `v18.12.1`
 - ts-node `v10.9.1`
 - yarn `v1.22.19`
 
